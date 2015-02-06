@@ -19,34 +19,16 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
     /**
      * Creates new form VentanaJuego
      */
-    private int pulso1;
-    private int pulso2;
-    private int pulso3;
-    private int pulso4;
-    private int pulso5;
-    private int pulso6;    
-    private int pulso7;    
-    private int pulso8;    
-    private int pulso9;  
-    
+  
     private int ganador; //1 para jugador x, 2 para jugador O y 3 para jugador gato
-    
+    private boolean jugador;
     Thread checador;
     
-    public VentanaJuego() {
+    public VentanaJuego(String jugadorUno,String jugadorDos) {
         initComponents();
-        
-        this.pulso1=0;
-        this.pulso2=0;
-        this.pulso3=0;
-        this.pulso4=0;
-        this.pulso5=0;
-        this.pulso6=0;
-        this.pulso7=0;
-        this.pulso8=0;
-        this.pulso9=0;
-        
+       
         this.ganador = 0;
+        this.jugador = true;
         
         this.checador = new Thread(this);
         this.checador.start();
@@ -54,6 +36,9 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
         txtGato.setText("0");
         txtJugadorO.setText("0");
         txtJugadorX.setText("0");
+        
+        this.lblJugadorUno.setText(jugadorUno);
+        this.lblJugadorDos.setText(jugadorDos);
         reiniciar();
         
     }
@@ -69,9 +54,9 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
 
         btIniciarJuego = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lblJugadorUno = new javax.swing.JLabel();
         txtJugadorX = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        lblJugadorDos = new javax.swing.JLabel();
         txtJugadorO = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtGato = new javax.swing.JTextField();
@@ -84,6 +69,7 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
         btn7 = new javax.swing.JButton();
         btn8 = new javax.swing.JButton();
         btn9 = new javax.swing.JButton();
+        btnTerminarJuego = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gato");
@@ -99,14 +85,20 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Marcadores");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setText("Jugador ( X )");
+        lblJugadorUno.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblJugadorUno.setText("Jugador ( X )");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel3.setText("Jugador ( O )");
+        txtJugadorX.setEditable(false);
+
+        lblJugadorDos.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblJugadorDos.setText("Jugador ( O )");
+
+        txtJugadorO.setEditable(false);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Gato");
+
+        txtGato.setEditable(false);
 
         btn1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         btn1.addActionListener(new java.awt.event.ActionListener() {
@@ -171,59 +163,73 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        btnTerminarJuego.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnTerminarJuego.setText("Terminar Juego");
+        btnTerminarJuego.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTerminarJuegoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtJugadorX, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btIniciarJuego)
+                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtJugadorO, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblJugadorUno)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtJugadorX, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(21, 21, 21)
+                                        .addComponent(lblJugadorDos)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtJugadorO, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel4)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtGato, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btn4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btn5, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btn6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(69, 69, 69)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(btIniciarJuego)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnTerminarJuego)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btIniciarJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btIniciarJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTerminarJuego, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -238,13 +244,13 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
                     .addComponent(btn7, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn8, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn9, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(26, 26, 26)
                 .addComponent(jLabel1)
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(lblJugadorUno)
                     .addComponent(txtJugadorX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
+                    .addComponent(lblJugadorDos)
                     .addComponent(txtJugadorO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(txtGato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -259,79 +265,83 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_btIniciarJuegoActionPerformed
 
     private void btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1ActionPerformed
-        this.pulso1++;
-        
-        this.btn1.setText(colocarEnCasilla(checaPulsos(this.pulso1)));   
+
+        this.btn1.setText(colocarEnCasilla(checaPulsos()));
+        this.btn1.setEnabled(false);
     }//GEN-LAST:event_btn1ActionPerformed
 
     private void btn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2ActionPerformed
-       this.pulso2++;
-        
-        this.btn2.setText(colocarEnCasilla(checaPulsos(this.pulso2)));
-        
+
+        this.btn2.setText(colocarEnCasilla(checaPulsos()));
+        this.btn2.setEnabled(false);
     }//GEN-LAST:event_btn2ActionPerformed
 
     private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
-       this.pulso3++;
-        
-        this.btn3.setText(colocarEnCasilla(checaPulsos(this.pulso3)));
-       
+
+        this.btn3.setText(colocarEnCasilla(checaPulsos()));
+        this.btn3.setEnabled(false);
     }//GEN-LAST:event_btn3ActionPerformed
 
     private void btn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn4ActionPerformed
-        this.pulso4++;
-        
-        this.btn4.setText(colocarEnCasilla(checaPulsos(this.pulso4)));
-        
+
+        this.btn4.setText(colocarEnCasilla(checaPulsos()));
+        this.btn4.setEnabled(false);
     }//GEN-LAST:event_btn4ActionPerformed
 
     private void btn5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn5ActionPerformed
-        this.pulso5++;
-        
-        this.btn5.setText(colocarEnCasilla(checaPulsos(this.pulso5)));
-        verificar();
-        terminoJuego(ganador(this.ganador)); 
+
+        this.btn5.setText(colocarEnCasilla(checaPulsos()));
+        this.btn5.setEnabled(false);
     }//GEN-LAST:event_btn5ActionPerformed
 
     private void btn6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn6ActionPerformed
-        this.pulso6++;
-        
-        this.btn6.setText(colocarEnCasilla(checaPulsos(this.pulso6)));
-        verificar();
-        terminoJuego(ganador(this.ganador)); 
+
+        this.btn6.setText(colocarEnCasilla(checaPulsos()));
+        this.btn6.setEnabled(false);
     }//GEN-LAST:event_btn6ActionPerformed
 
     private void btn7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn7ActionPerformed
-        this.pulso7++;
-        
-        this.btn7.setText(colocarEnCasilla(checaPulsos(this.pulso7)));
+
+        this.btn7.setText(colocarEnCasilla(checaPulsos()));
+        this.btn7.setEnabled(false);
     }//GEN-LAST:event_btn7ActionPerformed
 
     private void btn8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn8ActionPerformed
-        this.pulso8++;
-        
-        this.btn8.setText(colocarEnCasilla(checaPulsos(this.pulso8)));
+
+        this.btn8.setText(colocarEnCasilla(checaPulsos()));
+        this.btn8.setEnabled(false);
     }//GEN-LAST:event_btn8ActionPerformed
 
     private void btn9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn9ActionPerformed
-        this.pulso9++;
-        
-        this.btn9.setText(colocarEnCasilla(checaPulsos(this.pulso9)));
+        this.btn9.setText(colocarEnCasilla(checaPulsos()));
+        this.btn9.setEnabled(false);
     }//GEN-LAST:event_btn9ActionPerformed
 
-    private boolean checaPulsos(int pulsos){
-        if (pulsos % 2 ==0){
+    private void btnTerminarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminarJuegoActionPerformed
+        terminarJuego();
+    }//GEN-LAST:event_btnTerminarJuegoActionPerformed
+    
+    private void terminarJuego(){
+        if(JOptionPane.showConfirmDialog(null,"¿Desea terminar el juego?","Juego del Gato",JOptionPane.QUESTION_MESSAGE)==0){
+            mensaje("Puntuaciones:\n "+lblJugadorUno.getText()+": "+txtJugadorX.getText()+"\n"+lblJugadorUno.getText()+": "+txtJugadorO.getText());
+            reiniciar();
+        }
+    }
+    private boolean checaPulsos(){
+        if (this.jugador == true){
+            this.jugador = false;
             return true;
         }else{
+            this.jugador = true;
             return false;
         }
     }
     
     private String colocarEnCasilla(boolean valor){
         if (valor == true){
-            return "O";
-        }else{
             return "X";
+        }else{
+            return "O";
         }
     }
     
@@ -346,17 +356,19 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
         this.btn8.setText("");
         this.btn9.setText("");
         
-        this.pulso1=0;
-        this.pulso2=0;
-        this.pulso3=0;
-        this.pulso4=0;
-        this.pulso5=0;
-        this.pulso6=0;
-        this.pulso7=0;
-        this.pulso8=0;
-        this.pulso9=0;
+        this.ganador = 0;  
         
-        this.ganador = 0;                      
+        this.jugador = true;
+        
+        this.btn1.setEnabled(true);
+        this.btn2.setEnabled(true);
+        this.btn3.setEnabled(true);
+        this.btn4.setEnabled(true);
+        this.btn5.setEnabled(true);
+        this.btn6.setEnabled(true);
+        this.btn7.setEnabled(true);
+        this.btn8.setEnabled(true);
+        this.btn9.setEnabled(true);
         
     }
     
@@ -382,6 +394,61 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
             this.ganador = 2;            
         }
         
+        //JUGADOR X
+        if(btn1.getText().equals("X") & btn2.getText().equals("X") & btn3.getText().equals("X")){
+            this.ganador = 1;            
+        }
+        
+        if(btn4.getText().equals("X") & btn5.getText().equals("X") & btn6.getText().equals("X")){
+            this.ganador = 1;            
+        }
+        
+        if(btn7.getText().equals("X") & btn8.getText().equals("X") & btn9.getText().equals("X")){
+            this.ganador = 1;            
+        }
+        
+        //JUGADOR O
+        if(btn1.getText().equals("O") & btn2.getText().equals("O") & btn3.getText().equals("O")){
+            this.ganador = 2;            
+        }
+        
+        if(btn4.getText().equals("O") & btn5.getText().equals("O") & btn6.getText().equals("O")){
+            this.ganador = 2;            
+        }
+        
+        if(btn7.getText().equals("O") & btn8.getText().equals("O") & btn9.getText().equals("O")){
+            this.ganador = 2;            
+        }
+        
+        //JUGADOR X
+        if(btn1.getText().equals("X") & btn4.getText().equals("X") & btn7.getText().equals("X")){
+            this.ganador = 1;            
+        }
+        
+        if(btn2.getText().equals("X") & btn5.getText().equals("X") & btn8.getText().equals("X")){
+            this.ganador = 1;            
+        }
+        
+        if(btn3.getText().equals("X") & btn6.getText().equals("X") & btn9.getText().equals("X")){
+            this.ganador = 1;            
+        }
+        
+        //JUGADOR O
+        //JUGADOR O
+        if(btn1.getText().equals("O") & btn4.getText().equals("O") & btn7.getText().equals("O")){
+            this.ganador = 2;            
+        }
+        
+        if(btn2.getText().equals("O") & btn5.getText().equals("O") & btn8.getText().equals("O")){
+            this.ganador = 2;            
+        }
+        
+        if(btn3.getText().equals("O") & btn6.getText().equals("O") & btn9.getText().equals("O")){
+            this.ganador = 2;            
+        }
+        
+        
+        
         
     }
     
@@ -397,7 +464,7 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
         }                        
     }
     
-    private void mensaje(String mensaje){
+    public static void mensaje(String mensaje){
         JOptionPane.showMessageDialog(null,mensaje,"Juego del Gato",JOptionPane.INFORMATION_MESSAGE);
     }
     
@@ -491,10 +558,11 @@ public class VentanaJuego extends javax.swing.JFrame implements Runnable {
     private javax.swing.JButton btn7;
     private javax.swing.JButton btn8;
     private javax.swing.JButton btn9;
+    private javax.swing.JButton btnTerminarJuego;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblJugadorDos;
+    private javax.swing.JLabel lblJugadorUno;
     private javax.swing.JTextField txtGato;
     private javax.swing.JTextField txtJugadorO;
     private javax.swing.JTextField txtJugadorX;
